@@ -6,9 +6,11 @@ on:
     branches-ignore:
       - release
       - renovate/**
+      - feature/hosting
   pull_request:
     branches-ignore:
       - release
+      - feature/hosting
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
