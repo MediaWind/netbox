@@ -13,7 +13,7 @@ jobs:
       matrix:
         build:
           # - { "cmd": "./build-latest.sh", "branch": "release" }
-          - { "cmd": "./build.sh main", "branch": "feature/hosting" }
+          - { "cmd": "./build.sh v4.2.9", "branch": "feature/hosting" }
           # Build pre release images from our develop branch
           # This is used to test the latest changes before they are merged into the main branch
           # - { "cmd": "PRERELEASE=true ./build-latest.sh", "branch": "develop" }
