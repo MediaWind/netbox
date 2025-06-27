@@ -1,1 +1,1 @@
-PLUGINS = ['netbox_attachments']
+# PLUGINS = ['netbox_attachments']
