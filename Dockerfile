@@ -24,7 +24,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/uv venv /opt/netbox/venv
 
 ARG NETBOX_PATH
-COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
+COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt requirements-plugin.txt /
 ENV VIRTUAL_ENV=/opt/netbox/venv
 RUN \
     # Gunicorn is not needed because we use Granian
@@ -37,7 +37,8 @@ RUN \
     sed -i -e 's/django-storages/django-storages\[azure,boto3,dropbox,google,libcloud,sftp\]/g' /requirements.txt && \
     /usr/local/bin/uv pip install \
       -r /requirements.txt \
-      -r /requirements-container.txt
+      -r /requirements-container.txt \
+      -r /requirements-plugin.txt
 
 ###
 # Main stage
@@ -64,6 +65,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       tini \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy the modified 'requirements*.txt' files, to have the files actually used during installation
+COPY --from=builder /requirements.txt /requirements-container.txt /requirements-plugin.txt /opt/netbox/
 COPY --from=builder /usr/local/bin/uv /usr/local/bin/
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
 
@@ -87,7 +90,7 @@ WORKDIR /opt/netbox/netbox
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
 RUN useradd --home-dir /opt/netbox/ --no-create-home --no-user-group --system --shell /bin/false --uid 999 --gid 0 netbox \
-    && mkdir -p static media local \
+    && mkdir -p static/netbox_topology_views/img media local \
     && chown -R netbox:root media reports scripts \
     && chmod -R g+w media reports scripts \
     && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/zensical build \
