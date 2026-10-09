@@ -90,7 +90,7 @@ WORKDIR /opt/netbox/netbox
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
 RUN useradd --home-dir /opt/netbox/ --no-create-home --no-user-group --system --shell /bin/false --uid 999 --gid 0 netbox \
-    && mkdir -p static media local \
+    && mkdir -p static/netbox_topology_views/img media local \
     && chown -R netbox:root media reports scripts \
     && chmod -R g+w media reports scripts \
     && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/zensical build \
